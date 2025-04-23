@@ -5,6 +5,7 @@ import Book from './models/Books.js';
 
 dotenv.config()
 const app = express();
+const PORT = process.env.PORT || 5000;
 app.use(express.json());
 
 app.get("/books", async (req, res) => {
@@ -57,7 +58,7 @@ app.delete("/products/:id", async (req, res) => {
     }
 })
 
-app.listen(5000, ()=>{
+app.listen(PORT, ()=>{
     connectDB();
     console.log("Server started at port 5000");
 })
