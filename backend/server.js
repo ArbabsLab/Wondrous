@@ -15,6 +15,20 @@ app.get("/books", async (req, res) => {
         res.status(500).json({message: "Server error"});
     }
 })
+
+app.put("/books/:id", async (req, res) =>{
+    const {id} = req.params;
+
+    const book = req.body;
+
+    try{
+        const updatedBook = await Book.findByIdAndUpdate(id, book, {new: true})
+        res.status(201).json({message: `Updated ${id}`});
+    }catch(error){
+        res.status(404).json({message: "Product not found"});
+    }
+});
+
 app.post("/books", async (req, res) => {
     const book = req.body;
 
