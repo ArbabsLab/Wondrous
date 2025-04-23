@@ -23,7 +23,7 @@ app.put("/books/:id", async (req, res) =>{
 
     try{
         const updatedBook = await Book.findByIdAndUpdate(id, book, {new: true})
-        res.status(201).json({message: `Updated ${id}`});
+        res.status(201).json({message: `Updated ${id}`, data: updatedBook});
     }catch(error){
         res.status(404).json({message: "Product not found"});
     }
