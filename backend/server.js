@@ -8,6 +8,14 @@ const app = express();
 app.use(express.json());
 
 app.get("/books", async (req, res) => {
+    try {
+        const books = await Book.find({});
+        res.status(201).json({data: books});
+    }catch(error){
+        res.status(500).json({message: "Server error"});
+    }
+})
+app.post("/books", async (req, res) => {
     const book = req.body;
 
     if (!book.name || !book.author){
