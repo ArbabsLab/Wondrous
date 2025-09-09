@@ -1,4 +1,4 @@
-import { getPosts } from "@/actions/post.action";
+import { getPosts } from "@/actions/postActions";
 import { getDbUserId } from "@/actions/user.action";
 import CreatePost from "@/components/CreatePost";
 import PostCard from "@/components/PostCard";
