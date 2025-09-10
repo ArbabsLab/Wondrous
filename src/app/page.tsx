@@ -1,5 +1,5 @@
 import { getPosts } from "@/actions/postActions";
-import { getDbUserId } from "@/actions/user.action";
+import { getDbUserId } from "@/actions/userActions";
 import CreatePost from "@/components/CreatePost";
 import PostCard from "@/components/PostCard";
 import WhoToFollow from "@/components/WhoToFollow";
