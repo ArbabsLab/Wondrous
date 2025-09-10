@@ -1,6 +1,6 @@
 "use client";
 
-import { createComment, deletePost, getPosts, toggleLike } from "@/actions/post.action";
+import { createComment, deletePost, getPosts, toggleLike } from "@/actions/postActions";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -23,7 +23,7 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
   const [isLiking, setIsLiking] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [hasLiked, setHasLiked] = useState(post.likes.some((like) => like.userId === dbUserId));
-  const [optimisticLikes, setOptmisticLikes] = useState(post._count.likes);
+  const [optimisticLikes, setOptimisticLikes] = useState(post._count.likes);
   const [showComments, setShowComments] = useState(false);
 
   const handleLike = async () => {
@@ -31,10 +31,10 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
     try {
       setIsLiking(true);
       setHasLiked((prev) => !prev);
-      setOptmisticLikes((prev) => prev + (hasLiked ? -1 : 1));
+      setOptimisticLikes((prev) => prev + (hasLiked ? -1 : 1));
       await toggleLike(post.id);
     } catch (error) {
-      setOptmisticLikes(post._count.likes);
+      setOptimisticLikes(post._count.likes);
       setHasLiked(post.likes.some((like) => like.userId === dbUserId));
     } finally {
       setIsLiking(false);
@@ -98,10 +98,16 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
                     <span>{formatDistanceToNow(new Date(post.createdAt))} ago</span>
                   </div>
                 </div>
-                {/* Check if current user is the post author */}
+                {/* Verify post author */}
                 {dbUserId === post.author.id && (
                   <DeleteAlertDialog isDeleting={isDeleting} onDelete={handleDeletePost} />
                 )}
+              </div>
+              {/* Book metadata */}
+              <div className="mt-3 p-3 border rounded-lg bg-muted/30 text-sm">
+                <p><span className="font-semibold">Currently Reading:</span> {post.title}</p>
+                <p><span className="font-semibold">Author:</span> {post.writer}</p>
+                <p><span className="font-semibold">Genre:</span> {post.genre}</p>
               </div>
               <p className="mt-2 text-sm text-foreground break-words">{post.content}</p>
             </div>
