@@ -37,6 +37,10 @@ model User {
 
   notifications Notification[] @relation("userNotifications") // notifications received
   notificationsCreated Notification[] @relation("notificationCreator") // notifications triggered
+
+  circlePosts CirclePost[]
+  circle Circle[]
+  circleMember CircleMember[]
 }
 
 
@@ -127,3 +131,45 @@ enum NotificationType {
   COMMENT 
   FOLLOW   
 }
+
+model Circle {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  type        String?  
+  createdAt   DateTime @default(now())
+
+  // Creator of the circle
+  creatorId   String
+  creator     User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  // Relations
+  members     CircleMember[]
+  posts       CirclePost[]
+}
+
+model CircleMember {
+  id        String   @id @default(cuid())
+  circleId  String
+  userId    String
+  joinedAt  DateTime @default(now())
+
+  // Relations
+  circle    Circle   @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([circleId, userId]) // prevents duplicate memberships
+}
+
+model CirclePost {
+  id        String   @id @default(cuid())
+  circleId  String
+  authorId  String
+  content   String?
+  createdAt DateTime @default(now())
+
+  // Relations
+  circle    Circle   @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
