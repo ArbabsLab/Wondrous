@@ -105,7 +105,7 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
               </div>
               {/* Book metadata */}
               <div className="mt-3 p-3 border rounded-lg bg-muted/30 text-sm">
-                <p><span className="font-semibold">Currently Reading:</span> {post.title}</p>
+                <p><span className="font-semibold">Title:</span> {post.title}</p>
                 <p><span className="font-semibold">Author:</span> {post.writer}</p>
                 <p><span className="font-semibold">Genre:</span> {post.genre}</p>
               </div>
