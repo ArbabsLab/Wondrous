@@ -1,8 +1,10 @@
 import { getPosts } from "@/actions/postActions";
 import { getDbUserId } from "@/actions/userActions";
+import CreateCircleButton from "@/components/CreateCircle";
 import CreatePost from "@/components/CreatePost";
 import PostCard from "@/components/PostCard";
 import WhoToFollow from "@/components/WhoToFollow";
+import WhoToJoin from "@/components/WhoToJoin";
 import { currentUser } from "@clerk/nextjs/server";
 
 export default async function Home() {
@@ -24,6 +26,7 @@ export default async function Home() {
 
       <div className="hidden lg:block lg:col-span-4 sticky top-20">
         <WhoToFollow />
+        <WhoToJoin />
       </div>
     </div>
   );

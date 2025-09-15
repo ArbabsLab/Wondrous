@@ -7,7 +7,7 @@ import FollowButton from "./FollowButton";
 async function WhoToFollow() {
   const users = await getRandomUsers();
 
-  if (users.length === 0) return null;
+  if (users.length === 0) return (<>No users to follow right now.</>);
 
   return (
     <Card>
