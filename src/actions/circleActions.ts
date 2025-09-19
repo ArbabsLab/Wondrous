@@ -31,7 +31,7 @@ export async function createCircle({
   });
 
   
-  redirect("/circles");
+  revalidatePath("/circles");
 
   return circle;
 }

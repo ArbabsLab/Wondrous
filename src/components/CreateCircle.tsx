@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, FormEvent } from "react";
+import { useRouter } from "next/navigation"; 
 import { createCircle } from "@/actions/circleActions";
 
 interface CreateCircleButtonProps {
-  onCreated?: () => void; 
+  onCreated?: () => void;
 }
 
 export default function CreateCircleButton({ onCreated }: CreateCircleButtonProps) {
@@ -13,25 +14,38 @@ export default function CreateCircleButton({ onCreated }: CreateCircleButtonProp
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [description, setDescription] = useState("");
+  const router = useRouter();
 
-  const handleCreate = async () => {
-  if (!name) return alert("Circle name is required");
-  setLoading(true);
-  try {
-    await fetch("/api/circles", {
-      method: "POST",
-      body: JSON.stringify({ action: "create", name, type, description }),
-      headers: { "Content-Type": "application/json" },
-    });
-    setName(""); setType(""); setDescription("");
-    onCreated?.();
-    setOpen(false);
-  } catch (err) {
-    console.error(err);
-    alert("Failed to create circle");
-  } finally { setLoading(false); }
-};
+  const handleCreate = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) {
+      alert("Circle name is required");
+      return;
+    }
 
+    setLoading(true);
+    try {
+      await createCircle({
+        name: name.trim(),
+        description: description.trim(),
+        type: type.trim(),
+      });
+
+      
+      setName("");
+      setType("");
+      setDescription("");
+      setOpen(false);
+
+      onCreated?.();
+      router.refresh(); 
+    } catch (err) {
+      console.error(err);
+      alert("Failed to create circle");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div>
@@ -45,7 +59,10 @@ export default function CreateCircleButton({ onCreated }: CreateCircleButtonProp
 
       {/* Form */}
       {isOpen && (
-        <div className="mt-2 space-y-2 p-2 border rounded-lg bg-purple-50 dark:bg-purple-900">
+        <form
+          onSubmit={handleCreate}
+          className="mt-2 space-y-2 p-2 border rounded-lg bg-purple-50 dark:bg-purple-900"
+        >
           <input
             className="w-full p-2 rounded border"
             placeholder="Circle Name"
@@ -65,13 +82,13 @@ export default function CreateCircleButton({ onCreated }: CreateCircleButtonProp
             onChange={(e) => setDescription(e.target.value)}
           />
           <button
+            type="submit"
             className="px-4 py-2 rounded bg-purple-700 text-white hover:bg-purple-800 disabled:opacity-50"
-            onClick={handleCreate}
             disabled={loading}
           >
             {loading ? "Creating..." : "Create Circle"}
           </button>
-        </div>
+        </form>
       )}
     </div>
   );
